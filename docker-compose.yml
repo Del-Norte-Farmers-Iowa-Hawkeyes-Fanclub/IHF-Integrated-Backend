@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  spring-app:
+    build:
+      context: ./spring-app
+    volumes:
+      - ./db.sqlite:/app/db.sqlite
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:sqlite:/app/db.sqlite
+
+  flask-app:
+    build:
+      context: ./flask-app
+    volumes:
+      - ./db.sqlite:/app/db.sqlite
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=sqlite:///app/db.sqlite
+
+volumes:
+  db-data:
