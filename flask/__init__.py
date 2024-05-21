@@ -42,3 +42,9 @@ app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # maximum size of uploaded c
 app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif']  # supported file types
 app.config['UPLOAD_FOLDER'] = os.path.join(app.instance_path, 'uploads')
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+from api.monte_carlo_controller import monte_carlo_api
+app.register_blueprint(monte_carlo_api)
+
+from api.players import player_api
+app.register_blueprint(player_api)
