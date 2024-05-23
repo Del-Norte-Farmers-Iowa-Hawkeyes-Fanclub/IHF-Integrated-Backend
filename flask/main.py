@@ -8,10 +8,13 @@ from __init__ import app, db, login_manager  # Key Flask objects
 
 # API endpoints
 from api.players import player_api
+from api.monte_carlo_controller import monte_carlo_api
+
 # database Initialization functions
 from model.users import User, initUsers 
 from model.players import initPlayers
 from model.titanicML import initTitanic
+from model.jokes import initJokes
 # server only Views
 from views.algorithm.algorithm import algorithm_views 
 from views.recipes.recipe import recipe_views 
@@ -22,6 +25,7 @@ db.init_app(app)
 
 # register URIs for api endpoints
 app.register_blueprint(player_api)
+app.register_blueprint(monte_carlo_api)
 # register URIs for server pages
 app.register_blueprint(algorithm_views) 
 app.register_blueprint(recipe_views) 
@@ -78,6 +82,7 @@ def generate_data():
     initUsers()
     initPlayers()
     initTitanic()
+    initJokes()
 
 # Register the custom command group with the Flask application
 app.cli.add_command(custom_cli)
