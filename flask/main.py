@@ -11,9 +11,6 @@ from api.players import player_api
 from api.monte_carlo_controller import monte_carlo_api
 
 # database Initialization functions
-from model.users import User, initUsers 
-from model.players import initPlayers
-from model.titanicML import initTitanic
 from model.jokes import initJokes
 # server only Views
 from views.algorithm.algorithm import algorithm_views 
@@ -79,9 +76,6 @@ custom_cli = AppGroup('custom', help='Custom commands')
 # Define a command to run the data generation functions
 @custom_cli.command('generate_data')
 def generate_data():
-    initUsers()
-    initPlayers()
-    initTitanic()
     initJokes()
 
 # Register the custom command group with the Flask application
