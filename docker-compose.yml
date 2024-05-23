@@ -7,11 +7,11 @@ services:
     volumes:
       - ./sqlite.db:/app/sqlite.db
     ports:
-      - "6666:6666"
+      - "6942:6942"
 
   flask:
     build:
-      context: ./flask_app
+      context: ./flask
     volumes:
       - ./sqlite.db:/app/sqlite.db
     ports:
