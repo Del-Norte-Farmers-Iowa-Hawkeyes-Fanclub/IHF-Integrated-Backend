@@ -31,7 +31,7 @@ app.config['JWT_TOKEN_NAME'] = JWT_TOKEN_NAME
 
 # Setup SQLAlchemy object and properties for the database (db)
 # Local SQLite database within the instance folder
-dbURI = 'sqlite:///volumes/sqlite.db'
+dbURI = 'sqlite:///../sqlite.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = dbURI
 db = SQLAlchemy()
@@ -43,8 +43,4 @@ app.config['UPLOAD_EXTENSIONS'] = ['.jpg', '.png', '.gif']  # supported file typ
 app.config['UPLOAD_FOLDER'] = os.path.join(app.instance_path, 'uploads')
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-from api.monte_carlo_controller import monte_carlo_api
-app.register_blueprint(monte_carlo_api)
 
-from api.players import player_api
-app.register_blueprint(player_api)

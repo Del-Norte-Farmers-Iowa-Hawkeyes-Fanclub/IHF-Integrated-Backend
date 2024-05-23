@@ -1,4 +1,6 @@
 # imports from flask
+import os
+from sqlite3 import OperationalError
 from flask import redirect, render_template, request, url_for  # import render_template from "public" flask libraries
 from flask_login import current_user, login_user, logout_user
 from flask.cli import AppGroup
@@ -15,7 +17,6 @@ from model.jokes import initJokes
 from model.users import User, initUsers
 # server only Views
 from views.algorithm.algorithm import algorithm_views 
-from views.recipes.recipe import recipe_views 
 from views.projects.projects import project_views
 
 # Initialize the SQLAlchemy object to work with the Flask app instance
@@ -27,7 +28,6 @@ app.register_blueprint(monte_carlo_api)
 app.register_blueprint(user_api)
 # register URIs for server pages
 app.register_blueprint(algorithm_views) 
-app.register_blueprint(recipe_views) 
 app.register_blueprint(project_views) 
 
 @login_manager.user_loader
@@ -71,6 +71,16 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+@app.route('/check_db')
+def check_db():
+    db_path = os.path.join(app.instance_path, '../sqlite.db')
+    db_file_exists = os.path.exists('../sqlite.db')
+
+    return {
+        "db_file_exists": db_file_exists,
+    }
+
 
 # Create an AppGroup for custom commands
 custom_cli = AppGroup('custom', help='Custom commands')
