@@ -7,11 +7,7 @@ from flask.cli import AppGroup
 from __init__ import app, db, login_manager  # Key Flask objects 
 
 # API endpoints
-from api.covid import covid_api 
-from api.joke import joke_api 
-from api.user import user_api 
-from api.player import player_api
-from api.titanic import titanic_api
+from api.players import player_api
 # database Initialization functions
 from model.users import User, initUsers 
 from model.players import initPlayers
@@ -25,11 +21,7 @@ from views.projects.projects import project_views
 db.init_app(app)
 
 # register URIs for api endpoints
-app.register_blueprint(joke_api) 
-app.register_blueprint(covid_api) 
-app.register_blueprint(user_api) 
 app.register_blueprint(player_api)
-app.register_blueprint(titanic_api)
 # register URIs for server pages
 app.register_blueprint(algorithm_views) 
 app.register_blueprint(recipe_views) 
