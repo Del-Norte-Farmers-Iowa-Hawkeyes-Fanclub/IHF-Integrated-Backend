@@ -3,7 +3,7 @@ requests
 SQLAlchemy
 Werkzeug
 Flask_Login
-Flask_SqlAlchemy
+Flask-SQLAlchemy==2.5.1
 Flask_Migrate
 Flask_Restful
 Flask_Cors
