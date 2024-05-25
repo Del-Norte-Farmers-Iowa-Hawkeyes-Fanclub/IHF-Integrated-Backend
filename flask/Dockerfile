@@ -8,7 +8,7 @@ RUN apt-get update && apt-get upgrade -y && \
 COPY . /app
 
 RUN pip install --upgrade --root-user-action=ignore pip  
-RUN pip install --no-chache-dir --root-user-action=ignore -r requirements.txt
+RUN pip install --no-cache-dir --root-user-action=ignore -r requirements.txt
 RUN pip install --root-user-action=ignore gunicorn
 
 ENV GUNICORN_CMD_ARGS="--workers=1 --bind=0.0.0.0:8086"
