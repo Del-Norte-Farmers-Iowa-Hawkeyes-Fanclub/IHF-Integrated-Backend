@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.text.SimpleDateFormat;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/person")
@@ -65,9 +67,6 @@ public class PersonApiController {
         String password = (String) requestBody.get("password");
         String name = (String) requestBody.get("name");
         String dobString = (String) requestBody.get("dob");
-        Integer eco = (Integer) requestBody.get("eco");
-        String primaryCrop = (String) requestBody.get("primaryCrop");
-        Integer cash = (Integer) requestBody.get("cash");
 
         Date dob;
         try {
@@ -78,7 +77,7 @@ public class PersonApiController {
 
         // A person object WITHOUT ID will create a new record with default roles as
         // student
-        Person person = new Person(email, password, name, eco, primaryCrop, cash, dob);
+        Person person = new Person(email, password, name, dob);
         personDetailsService.save(person);
 
         return new ResponseEntity<>(email + " is created successfully", HttpStatus.CREATED);
@@ -150,6 +149,38 @@ public class PersonApiController {
         return new ResponseEntity<>(eco, HttpStatus.OK);
     }
 
+    @GetMapping("/crops")
+    public ResponseEntity<List<Person>> getPeopleSortedByCrops() {
+        List<Person> people = repository.findAll();
+        people.sort(Comparator.comparingInt(Person::getCropQuantity).reversed());
+        return new ResponseEntity<>(people, HttpStatus.OK);
+    }
+
+    @GetMapping("/cash")
+    public ResponseEntity<List<Person>> getPeopleSortedByCash() {
+        List<Person> people = repository.findAll();
+        people.sort(Comparator.comparingInt(Person::getCash).reversed());
+        return new ResponseEntity<>(people, HttpStatus.OK);
+    }
+
+    @PostMapping("/getCrops")
+    public ResponseEntity<Object> getCrops(@RequestBody Map<String, Object> requestBody) {
+        String email = (String) requestBody.get("email");
+        Person player = personDetailsService.getByEmail(email);
+        int cropQuantity = (player != null) ? player.getCropQuantity() : 0;
+        return new ResponseEntity<>(cropQuantity, HttpStatus.OK);
+    }
+
+    @PostMapping("/cropQuantityUpdate")
+    public ResponseEntity<Object> postCropQuantity(@RequestBody Map<String, Object> requestBody) {
+        String email = (String) requestBody.get("email");
+        Integer cropQuantity = (Integer) requestBody.get("cropQuantity");
+
+        personDetailsService.changeCropQuantity(email, cropQuantity);
+
+        return new ResponseEntity<>(email + " is updated successfully", HttpStatus.CREATED);
+    }
+
     @PostMapping("/ecoUpdate")
     public ResponseEntity<Object> postEco(@RequestBody Map<String, Object> requestBody) {
         String email = (String) requestBody.get("email");
@@ -164,7 +195,6 @@ public class PersonApiController {
         String email = (String) requestBody.get("email");
         Person player = personDetailsService.getByEmail(email);
         System.out.println(player.getCash());
-        System.out.println("aksdjfhaslkdjfhaslkjdhalkjsdfhakjsdhflikjudshfkljasdhfkljashdfkjlahsdkfljhasdlkjfhalskjdhfalksjdhflkjasdhf");
         int cash = (player != null) ? player.getCash() : 0;
         System.out.println(player.getCash());
         return new ResponseEntity<>(cash, HttpStatus.OK);
@@ -178,5 +208,44 @@ public class PersonApiController {
         personDetailsService.changeCash(email, cash);
 
         return new ResponseEntity<>(email + " is updated successfully", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/integerMap/update/{id}")
+    public ResponseEntity<String> updateIntegerMap(@PathVariable long id,
+            @RequestBody Map<String, Integer> integerMap) {
+        Optional<Person> optional = repository.findById(id);
+        if (optional.isPresent()) {
+            Person person = optional.get();
+            Map<String, Integer> existingIntegerMap = person.getIntegerMap();
+            existingIntegerMap.putAll(integerMap);
+            person.setIntegerMap(existingIntegerMap);
+            repository.save(person);
+            return new ResponseEntity<>("Additional key-value pairs added to the integerMap for person with ID: " + id,
+                    HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Person not found with ID: " + id, HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/integerMap/{id}")
+    public ResponseEntity<Map<String, Integer>> getIntegerMap(@PathVariable long id) {
+        Optional<Person> optional = repository.findById(id);
+        if (optional.isPresent()) {
+            Person person = optional.get();
+            Map<String, Integer> integerMap = person.getIntegerMap();
+            return new ResponseEntity<>(integerMap, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("integerMap/delete/{id}")
+    public ResponseEntity<String> deleteIntegerMap(@PathVariable long id) {
+        Optional<Person> optional = repository.findById(id);
+        if (optional.isPresent()) {
+            Person person = optional.get();
+            person.setIntegerMap(new HashMap<>());
+            repository.save(person);
+            return new ResponseEntity<>("IntegerMap deleted successfully for person with ID: " + id, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Person not found with ID: " + id, HttpStatus.NOT_FOUND);
     }
 }
