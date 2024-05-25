@@ -100,6 +100,7 @@ def generate_data():
     initUsers()
 
 # Register the custom command group with the Flask application
+# Register the custom command group with the Flask application
 app.cli.add_command(custom_cli)
         
 # this runs the flask application on the development server
