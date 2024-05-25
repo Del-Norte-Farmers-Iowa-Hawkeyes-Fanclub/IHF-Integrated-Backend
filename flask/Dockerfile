@@ -7,8 +7,9 @@ RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y python3 python3-pip git
 COPY . /app
 
-RUN pip install -r requirements.txt
-RUN pip install gunicorn
+RUN pip install --upgrade --root-user-action=ignore pip  
+RUN pip install -r --root-user-action=ignore requirements.txt
+RUN pip install --root-user-action=ignore gunicorn
 
 ENV GUNICORN_CMD_ARGS="--workers=1 --bind=0.0.0.0:8086"
 
