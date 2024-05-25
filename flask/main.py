@@ -34,6 +34,10 @@ app.register_blueprint(project_views)
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+@app.before_request
+def before_request_func():
+    initUsers()
+
 @app.context_processor
 def inject_user():
     return dict(current_user=current_user)
@@ -103,3 +107,5 @@ if __name__ == "__main__":
 ## new app router
 ## first commit on new repo
 ## I can't run main.py ROHIN can you run it once I commit 
+## Vardaan vs. David
+## new commit
