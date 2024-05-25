@@ -13,11 +13,11 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
-public class MonteCarloController {
+public class MonteCarloControllerUpgrade {
 
-    @PostMapping("/simulate")
+    @PostMapping("/simulateup")
     public Map<String, Double[]> simulateFantasyPoints(@RequestBody String jsonData) {
-        MonteCarloSimulator simulator = new MonteCarloSimulator();
+        MonteCarloSimulatorUpgrade simulator = new MonteCarloSimulatorUpgrade(); // Use the upgraded simulator
         GameTeamsParser parser = new GameTeamsParser();
         
         try {
