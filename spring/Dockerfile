@@ -4,6 +4,6 @@ WORKDIR /app
 RUN apk update && apk upgrade && \
     apk add --no-cache git
 COPY . /app
-RUN ./mvnw package
+RUN chmod +x ./mvnw package
 CMD ["java", "-jar", "target/spring-0.0.1-SNAPSHOT.jar"]
 EXPOSE 6942
