@@ -23,6 +23,7 @@ from views.projects.projects import project_views
 db.init_app(app)
 
 # register URIs for api endpoints
+# register URIs for api endpoints
 app.register_blueprint(player_api)
 app.register_blueprint(monte_carlo_api)
 app.register_blueprint(user_api)
@@ -38,6 +39,7 @@ def load_user(user_id):
 def before_request_func():
     initUsers()
 
+# app context processor
 @app.context_processor
 def inject_user():
     return dict(current_user=current_user)
@@ -52,6 +54,7 @@ def index():
     print("Home:", current_user)
     return render_template("index.html")
 
+# returns render template for table
 @app.route('/table/')  # connects /table/ URL
 def table():
     return render_template("table.html")
@@ -60,6 +63,7 @@ def table():
 def login_page():
     return render_template("login.html")
 
+# first request for first backend, second request for second backend
 @app.route('/login', methods=['POST'])
 def login():
     # authenticate user
