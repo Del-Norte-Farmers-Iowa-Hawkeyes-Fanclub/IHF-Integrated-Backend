@@ -82,9 +82,9 @@ public class SecurityConfig {
 						.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-MaxAge", "600"))
 						.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Methods", "POST", "GET",
 								"OPTIONS", "HEAD"))
-				// .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin",
-				// "http://127.0.0.1:4000", "http://localhost:4000", "https://del-norte-farmers-iowa-hawkeyes-fanclub.github.io/IHF-Project-Frontend/"))
-				)
+						.addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin",
+								"http://127.0.0.1:4000", "http://localhost:4000",
+								"https://del-norte-farmers-iowa-hawkeyes-fanclub.github.io/IHF-Project-Frontend/")))
 				.formLogin(form -> form
 						.loginPage("/login"))
 				.logout(logout -> logout
