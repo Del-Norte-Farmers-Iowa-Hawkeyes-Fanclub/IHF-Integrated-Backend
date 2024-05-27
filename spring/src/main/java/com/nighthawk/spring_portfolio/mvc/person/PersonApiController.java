@@ -57,10 +57,7 @@ public class PersonApiController {
         
         requestBody.forEach((position, name) -> {
             if (position == "email") return;
-            Player player = new Player();
-            player.setPlayerName(name);
-            player.setPosition(position);
-            player.setPerson(person);
+            Player player = new Player(name, position, person);
             playerRepo.save(player);
             person.getPlayers().add(player);
         });
@@ -70,6 +67,28 @@ public class PersonApiController {
         return new ResponseEntity<>(person, HttpStatus.OK);
     }
 
+    @GetMapping("/getPlayers")
+    public ResponseEntity<List<Player>> getPlayers(@RequestBody Map<String, String> requestBody) {
+        Person person = repository.findByEmail((String) requestBody.get("email"));
+
+        return new ResponseEntity<>(person.getPlayers(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getFantasyScore")
+    public ResponseEntity<Object> getFantasyScore(@RequestBody Map<String, String> requestBody) {
+        Person person = repository.findByEmail((String) requestBody.get("email"));
+
+        return new ResponseEntity<>(person.getFantasyScore(), HttpStatus.OK);
+    }
+
+    @PutMapping("/setFantasyScore")
+    public ResponseEntity<Object> setFantasyScore(@RequestBody Map<String, String> requestBody) {
+        Person person = repository.findByEmail((String) requestBody.get("email"));
+
+        person.setFantasyScore(Double.parseDouble(requestBody.get("score")));
+
+        return new ResponseEntity<>(person.getFantasyScore(), HttpStatus.OK);
+    }
 
     /*
      * DELETE individual Person using ID

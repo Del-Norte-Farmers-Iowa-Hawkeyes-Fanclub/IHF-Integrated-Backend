@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,6 +66,8 @@ public class Person {
     private Integer cash;
 
     private Integer cropQuantity;
+    
+    private double fantasyScore;
 
     @NonNull
     @Size(min = 2, max = 30, message = "Name (2 to 30 chars)")
@@ -132,6 +135,9 @@ public class Person {
         p1.setCash(52);
         p1.getIntegerMap().put("Team 1", 1);
         p1.getIntegerMap().put("Team 2", 40);
+        List<Player> mockPlayers = new ArrayList<Player>();
+        mockPlayers.add(new Player("jamal", "back", p1));
+        p1.setPlayers(mockPlayers);
         try {
             Date d = new SimpleDateFormat("MM-dd-yyyy").parse("12-06-2007");
             p1.setDob(d);

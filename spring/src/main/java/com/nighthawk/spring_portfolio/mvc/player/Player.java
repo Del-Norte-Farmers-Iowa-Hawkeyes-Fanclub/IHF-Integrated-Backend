@@ -35,9 +35,9 @@ public class Player {
                 '}';
     }
 
-    public Player(String playerName, Person person) {
+    public Player(String playerName, String position, Person person) {
         this.playerName = playerName;
         this.person = person;
-        this.position = "";
+        this.position = position;
     }
 }
