@@ -56,20 +56,14 @@ class UserAPI:
             return {'message': f'Processed {name}, either a format error or User ID {uid} is duplicate'}, 400
 
         @token_required()
-        def get(self):
+        def get(self, current_user):
             # retrieve the current user from the token_required authenication check  
-            current_user = g.current_user
-            # current_user extracted from the token using token_required decorator
-            users = User.query.all() # extract all users from the database
-             
+            users = User.query.all()  # extract all users from the database
+            
             # prepare a json list of user dictionaries
             json_ready = []  
             for user in users:
                 user_data = user.read()
-                if current_user.role == 'Admin' or current_user.id == user.id:
-                    user_data['access'] = ['rw'] # read-write access control 
-                else:
-                    user_data['access'] = ['ro'] # read-only access control 
                 json_ready.append(user_data)
             
             # return response, a json list of user dictionaries

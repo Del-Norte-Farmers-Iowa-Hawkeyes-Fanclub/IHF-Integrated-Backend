@@ -35,9 +35,10 @@ app.register_blueprint(project_views)
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-@app.before_request
-def before_request_func():
+@app.route('/init')
+def init():
     initUsers()
+    return "ayyyyy"
 
 # app context processor
 @app.context_processor
