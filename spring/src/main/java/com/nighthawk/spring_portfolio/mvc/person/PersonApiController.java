@@ -210,6 +210,14 @@ public class PersonApiController {
         return new ResponseEntity<>(people, HttpStatus.OK);
     }
 
+    @GetMapping("/cashAlt")
+    public ResponseEntity<List<Person>> cashSortAlternate() {
+        List<Person> people = repository.findAll();
+        Person[] peopleArray = people.toArray(new Person[0]);
+        Person.quickSort(peopleArray, 0, peopleArray.length - 1);
+        return new ResponseEntity<>(Arrays.asList(peopleArray), HttpStatus.OK);
+    }
+    
     @PostMapping("/getCrops")
     public ResponseEntity<Object> getCrops(@RequestBody Map<String, Object> requestBody) {
         String email = (String) requestBody.get("email");

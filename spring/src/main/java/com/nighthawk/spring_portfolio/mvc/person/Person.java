@@ -124,6 +124,38 @@ public class Person {
         return -1;
     }
 
+    public static void quickSort(Person[] arr, int low, int high) {
+        if (low < high) {
+            int pi = partition(arr, low, high);
+            quickSort(arr, low, pi - 1);
+            quickSort(arr, pi + 1, high);
+        }
+    }
+
+    private static int partition(Person[] arr, int low, int high) {
+        Person pivot = arr[high];
+        int i = (low - 1); // Index of smaller element
+
+        for (int j = low; j < high; j++) {
+            // If the current element is greater than or equal to the pivot
+            if (arr[j].getCash() >= pivot.getCash()) {
+                i++;
+
+                // Swap arr[i] and arr[j]
+                Person temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+
+        // Swap arr[i + 1] and arr[high] (or pivot)
+        Person temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
+
+        return i + 1;
+    }
+
     public static Person[] init() {
         Person p1 = new Person();
         p1.setName("h4seebcmd");
