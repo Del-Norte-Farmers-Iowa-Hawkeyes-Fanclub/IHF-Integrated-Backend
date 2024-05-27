@@ -75,20 +75,47 @@ public class PersonApiController {
     }
 
     @GetMapping("/getFantasyScore")
-    public ResponseEntity<Object> getFantasyScore(@RequestBody Map<String, String> requestBody) {
-        Person person = repository.findByEmail((String) requestBody.get("email"));
-
-        return new ResponseEntity<>(person.getFantasyScore(), HttpStatus.OK);
+    public ResponseEntity<Object> getFantasyScore(@RequestParam String email) {
+        try {
+            Person person = repository.findByEmail(email);
+            if (person == null) {
+                return new ResponseEntity<>("Person not found", HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(person.getFantasyScore(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
-    @PutMapping("/setFantasyScore")
+
+    @PutMapping("/setFantasyScore/")
     public ResponseEntity<Object> setFantasyScore(@RequestBody Map<String, String> requestBody) {
-        Person person = repository.findByEmail((String) requestBody.get("email"));
-
-        person.setFantasyScore(Double.parseDouble(requestBody.get("score")));
-
-        return new ResponseEntity<>(person.getFantasyScore(), HttpStatus.OK);
+        try {
+            String email = requestBody.get("email");
+            String scoreStr = requestBody.get("score");
+            
+            System.out.println("Email: " + email);  // Debugging statement
+            System.out.println("Score: " + scoreStr);  // Debugging statement
+            
+            if (email == null || scoreStr == null) {
+                return new ResponseEntity<>("Email and score are required", HttpStatus.BAD_REQUEST);
+            }
+            Person person = repository.findByEmail(email);
+            if (person == null) {
+                return new ResponseEntity<>("Person not found", HttpStatus.NOT_FOUND);
+            }
+            double score = Double.parseDouble(scoreStr);
+            person.setFantasyScore(score);
+            repository.save(person);
+            return new ResponseEntity<>(person.getFantasyScore(), HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<>("Invalid score format", HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
+
 
     /*
      * DELETE individual Person using ID
