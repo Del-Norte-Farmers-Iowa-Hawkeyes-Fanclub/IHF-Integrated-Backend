@@ -6,6 +6,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.nighthawk.spring_portfolio.mvc.player.Player;
+import com.nighthawk.spring_portfolio.mvc.player.PlayerJpaRepository;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.ArrayList;
@@ -21,12 +25,36 @@ public class PersonDetailsService implements UserDetailsService { // "implements
     // Encapsulate many object into a single Bean (Person, Roles, and Scrum)
     @Autowired // Inject PersonJpaRepository
     private PersonJpaRepository personJpaRepository;
+
+    @Autowired // Inject PersonJpaRepository
+    private PlayerJpaRepository playerRepo;
     @Autowired // Inject RoleJpaRepository
     private PersonRoleJpaRepository personRoleJpaRepository;
 
     // @Autowired // Inject PasswordEncoder
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    public Person setPlayers(String email, Map<String, String> playersMap) {
+        Person person = personJpaRepository.findByEmail(email);
+        
+        person.getPlayers().clear();  // Clear existing players
+
+        // Add new players
+        playersMap.forEach((position, name) -> {
+            if (position == "email") return;
+            Player player = new Player();
+            player.setPlayerName(name);
+            player.setPosition(position);
+            player.setPerson(person);
+            playerRepo.save(player);
+            person.getPlayers().add(player);
+        });
+
+        System.out.println(person);
+
+        return person;
     }
 
     /*

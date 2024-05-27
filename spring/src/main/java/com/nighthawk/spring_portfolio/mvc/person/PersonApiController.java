@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.google.gson.JsonObject;
 import com.nighthawk.spring_portfolio.mvc.person.MapData.Layer;
 import com.nighthawk.spring_portfolio.mvc.person.MapData.Tileset;
+import com.nighthawk.spring_portfolio.mvc.player.*;
 
 import java.util.*;
 import java.text.SimpleDateFormat;
@@ -19,6 +20,9 @@ public class PersonApiController {
     // Autowired enables Control to connect POJO Object through JPA
     @Autowired
     private PersonJpaRepository repository;
+
+    @Autowired
+    private PlayerJpaRepository playerRepo;
 
     @Autowired
     private PersonDetailsService personDetailsService;
@@ -44,6 +48,28 @@ public class PersonApiController {
         // Bad ID
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    @PutMapping("/setPlayers")
+    public ResponseEntity<Person> setPlayers(@RequestBody Map<String, String> requestBody) {
+        Person person = repository.findByEmail((String) requestBody.get("email"));
+        person.getPlayers().clear();  // Clear existing players
+
+        
+        requestBody.forEach((position, name) -> {
+            if (position == "email") return;
+            Player player = new Player();
+            player.setPlayerName(name);
+            player.setPosition(position);
+            player.setPerson(person);
+            playerRepo.save(player);
+            person.getPlayers().add(player);
+        });
+
+        repository.save(person);
+
+        return new ResponseEntity<>(person, HttpStatus.OK);
+    }
+
 
     /*
      * DELETE individual Person using ID

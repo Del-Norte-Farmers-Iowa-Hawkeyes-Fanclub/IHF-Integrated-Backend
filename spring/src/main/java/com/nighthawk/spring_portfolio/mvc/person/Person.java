@@ -10,20 +10,27 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.nighthawk.spring_portfolio.mvc.player.Player;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -80,6 +87,9 @@ public class Person {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
     private MapData mapData = new MapData();
+
+    @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
+    private List<Player> players = new ArrayList<Player>();
 
     public Person(String email, String password, String name, Integer eco, String primaryCrop, Integer cash, Date dob) {
         this.email = email;
@@ -239,6 +249,14 @@ public class Person {
                 integerMap.put("value3", 30);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "email='" + email + '\'' +
+                ", players=" + players +
+                '}';
     }
 
     public static void main(String[] args) {
