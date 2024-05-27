@@ -66,7 +66,7 @@ public class Person {
     private Integer cash;
 
     private Integer cropQuantity;
-    
+
     private double fantasyScore;
 
     @NonNull
@@ -133,6 +133,7 @@ public class Person {
         p1.setCropQuantity(0);
         p1.setPrimaryCrop("corn");
         p1.setCash(52);
+        p1.setFantasyScore(100);
         p1.getIntegerMap().put("Team 1", 1);
         p1.getIntegerMap().put("Team 2", 40);
         List<Player> mockPlayers = new ArrayList<Player>();
