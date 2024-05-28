@@ -192,6 +192,49 @@ public class Person {
         }
     }
 
+    public static void mergeSort(Person[] arr) {
+        if (arr.length > 1) {
+            int mid = arr.length / 2;
+
+            // Split left part
+            Person[] left = new Person[mid];
+            System.arraycopy(arr, 0, left, 0, mid);
+
+            // Split right part
+            Person[] right = new Person[arr.length - mid];
+            System.arraycopy(arr, mid, right, 0, arr.length - mid);
+
+            mergeSort(left);
+            mergeSort(right);
+
+            // Merge left and right arrays
+            merge(arr, left, right);
+        }
+    }
+
+    private static void merge(Person[] result, Person[] left, Person[] right) {
+        int i = 0, j = 0, k = 0;
+
+        // Merge arrays into result in descending order based on cropQuantity
+        while (i < left.length && j < right.length) {
+            if (left[i].getCropQuantity() >= right[j].getCropQuantity()) {
+                result[k++] = left[i++];
+            } else {
+                result[k++] = right[j++];
+            }
+        }
+
+        // Copy remaining elements of left, if any
+        while (i < left.length) {
+            result[k++] = left[i++];
+        }
+
+        // Copy remaining elements of right, if any
+        while (j < right.length) {
+            result[k++] = right[j++];
+        }
+    }
+
     public static Person[] init() {
         Person p1 = new Person();
         p1.setName("h4seebcmd");
