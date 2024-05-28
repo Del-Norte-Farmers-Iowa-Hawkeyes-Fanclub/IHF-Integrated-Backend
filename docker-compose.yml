@@ -5,18 +5,19 @@ services:
     build:
       context: ./spring
     volumes:
-      - ./sqlite.db:/app/sqlite.db
+      # - ./sqlite.db:/app/sqlite.db
+      - ./volumes:/volumes
     ports:
       - "6942:6942"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:sqlite:/sqlite.db
+      - SPRING_DATASOURCE_URL=jdbc:sqlite:volumes/sqlite.db
 
   flask:
     build:
       context: ./flask
     volumes:
-      - ./sqlite.db:/app/sqlite.db
+      - ./volumes:/volumes
     ports:
       - "8086:8086"
     environment:
-      - DATABASE_URL=sqlite:///sqlite.db
+      - DATABASE_URL=sqlite:///volumes/sqlite.db

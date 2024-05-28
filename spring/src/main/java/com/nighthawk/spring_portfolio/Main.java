@@ -21,8 +21,9 @@ public class Main {
     @EventListener(ApplicationReadyEvent.class)
     public void applicationStart() {
         System.out.println("Application started!");
-
-        Resource coolDbResource = new FileSystemResource("../sqlite.db");
+        // volumes/sqlite.db
+        Resource coolDbResource = new FileSystemResource(
+                ".../volumes/sqlite.db");
 
         if (coolDbResource.exists()) {
             System.out.println("sqlite.db file found");
@@ -30,6 +31,5 @@ public class Main {
             System.out.println("-Jamal-");
         }
     }
-
 
 }
