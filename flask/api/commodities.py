@@ -17,7 +17,7 @@ def calculate_score():
     commodity_data = CommodityData(num_futures, action)
     score = commodity_data.evaluate_commodity()
     
-    return jsonify({"score": score})
+    return jsonify({"score": score[2]})
 
 @commodities_api.route('/generate_graph', methods=['POST'])
 def generate_graph():

@@ -5,7 +5,7 @@ import pandas as pd
 import json
 
 # Update the file path to match your directory structure
-FUTURES_DATA_PATH = 'flask/api/Futures_Data.json'
+FUTURES_DATA_PATH = 'api/Futures_Data.json'
 
 def fetch_historical_data_recent():
     with open(FUTURES_DATA_PATH, 'r') as f:
@@ -29,7 +29,7 @@ class CommodityData:
 
     def evaluate_commodity(self):
         # Load the LSTM model
-        model = load_model('flask/api/corn_futures_lstm_model.h5')
+        model = load_model('api/corn_futures_lstm_model.h5')
 
         # Fetch the 10 most recent historical data points
         historical_data = fetch_historical_data_recent()
@@ -62,14 +62,14 @@ class CommodityData:
 
         # Make prediction
         prediction = model.predict(X)
-        predicted_price = prediction[0][0]
+        predicted_price = float(prediction[0][0])
 
         # Calculate score based on action
         score = (predicted_price - self.trading_price) * self.num_futures
         if self.action == 'sell':
             score = -score  # Invert the score for sell actions, assuming a positive score is good for buy
 
-        return self.trading_price, predicted_price, score
+        return float(self.trading_price), predicted_price, float(score)
 
 # Tester code
 if __name__ == "__main__":

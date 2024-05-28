@@ -2,7 +2,7 @@ import json
 import pandas as pd
 
 def fetch_historical_data():
-    with open('flask/api/Futures_Data.json') as f:
+    with open('api/Futures_Data.json') as f:
         data = json.load(f)
     
     df = pd.DataFrame(data['dataset']['data'], columns=data['dataset']['column_names'])
@@ -11,7 +11,7 @@ def fetch_historical_data():
     return df
 
 def fetch_historical_data_recent():
-    with open('flask/api/Futures_Data.json') as f:
+    with open('api/Futures_Data.json') as f:
         data = json.load(f)
     
     df = pd.DataFrame(data['dataset']['data'], columns=data['dataset']['column_names'])
