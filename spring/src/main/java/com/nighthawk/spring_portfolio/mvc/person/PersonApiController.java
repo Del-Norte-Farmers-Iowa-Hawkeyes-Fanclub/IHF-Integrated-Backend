@@ -97,6 +97,10 @@ public class PersonApiController {
     public ResponseEntity<Object> deletePlayers(@RequestBody Map<String, String> requestBody) {
         Person person = repository.findByEmail((String) requestBody.get("email"));
 
+        person.getPlayers().clear();
+
+        playerRepo.deleteAll();
+
         return new ResponseEntity<>(person.getPlayersJson(), HttpStatus.OK);
     }
 
