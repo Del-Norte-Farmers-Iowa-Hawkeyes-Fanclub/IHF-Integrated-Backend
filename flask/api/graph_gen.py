@@ -6,11 +6,11 @@ import pandas as pd
 from keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 from datetime import datetime, timedelta
-from .histdata import fetch_historical_data
+from histdata import fetch_historical_data
 
 def plot_corn_futures(num_historical_points, num_predicted_points, filename):
     # Load the LSTM model
-    model = load_model('api/corn_futures_lstm_model.h5')
+    model = load_model('flask/api/corn_futures_lstm_model.h5')
 
     # Fetch the required number of historical data points
     historical_data = fetch_historical_data()[-num_historical_points:]
@@ -82,8 +82,8 @@ def plot_corn_futures(num_historical_points, num_predicted_points, filename):
     plt.tight_layout()
 
     # Save plot to file
-    plt.savefig('api/images/' + filename)
+    plt.savefig('flask/api/images/' + filename)
     plt.close()
 
 if __name__ == "__main__":
-    plot_corn_futures(25, 5, 'test.png')
+    plot_corn_futures(100, 50, 'test.png')

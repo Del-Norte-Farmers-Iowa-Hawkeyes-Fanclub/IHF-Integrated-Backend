@@ -2,8 +2,18 @@ import numpy as np
 from keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
-import requests
-from .histdata import fetch_historical_data_recent
+import json
+
+# Update the file path to match your directory structure
+FUTURES_DATA_PATH = 'flask/api/Futures_Data.json'
+
+def fetch_historical_data_recent():
+    with open(FUTURES_DATA_PATH, 'r') as f:
+        data = json.load(f)
+    df = pd.DataFrame(data['dataset']['data'], columns=data['dataset']['column_names'])
+    df['Date'] = pd.to_datetime(df['Date'])
+    df = df.sort_values(by='Date').tail(10)  # Get the 10 most recent data points
+    return df
 
 class CommodityData:
     def __init__(self, num_futures, action):
@@ -12,23 +22,14 @@ class CommodityData:
         self.action = action
 
     def fetch_current_trading_price(self):
-        url = "https://data.nasdaq.com/api/v3/datasets/TFGRAIN/CORN/data.json"
-        params = {
-            "order": "desc",  # Order by descending date
-            "limit": 1,
-        }
-        response = requests.get(url, params=params)
-        
-        if response.status_code == 200:
-            data = response.json().get('dataset_data').get('data')
-            current_price = data[0][1]  # Assuming 'Cash Price' is the second column
-            return current_price
-        else:
-            raise Exception(f"Failed to fetch current trading price: {response.status_code}")
+        with open(FUTURES_DATA_PATH, 'r') as f:
+            data = json.load(f)
+        current_price = data['dataset']['data'][-1][1]  # Assuming 'Cash Price' is the second column
+        return current_price
 
     def evaluate_commodity(self):
         # Load the LSTM model
-        model = load_model('api/corn_futures_lstm_model.h5')
+        model = load_model('flask/api/corn_futures_lstm_model.h5')
 
         # Fetch the 10 most recent historical data points
         historical_data = fetch_historical_data_recent()
@@ -68,4 +69,20 @@ class CommodityData:
         if self.action == 'sell':
             score = -score  # Invert the score for sell actions, assuming a positive score is good for buy
 
-        return score
+        return self.trading_price, predicted_price, score
+
+# Tester code
+if __name__ == "__main__":
+    num_futures = 100  # Number of futures to buy/sell
+    action = 'buy'  # Action: 'buy' or 'sell'
+
+    # Create an instance of CommodityData
+    commodity_data = CommodityData(num_futures, action)
+
+    # Evaluate commodity
+    trading_price, predicted_price, score = commodity_data.evaluate_commodity()
+
+    # Print the result
+    print(f"Current Trading Price: {trading_price}")
+    print(f"Predicted Trading Price: {predicted_price}")
+    print(f"Evaluation Score: {score}")
