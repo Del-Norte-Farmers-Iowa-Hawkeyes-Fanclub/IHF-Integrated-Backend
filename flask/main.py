@@ -12,6 +12,7 @@ from __init__ import app, db, login_manager  # Key Flask objects
 from api.players import player_api
 from api.monte_carlo_controller import monte_carlo_api
 from api.user import user_api
+from commodities.controller import commodities_api  # Import the new commodities controller
 # database Initialization functions
 from model.jokes import initJokes
 from model.users import User, initUsers
@@ -27,6 +28,7 @@ db.init_app(app)
 app.register_blueprint(player_api)
 app.register_blueprint(monte_carlo_api)
 app.register_blueprint(user_api)
+app.register_blueprint(commodities_api)
 # register URIs for server pages
 app.register_blueprint(algorithm_views) 
 app.register_blueprint(project_views) 
