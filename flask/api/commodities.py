@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify, send_file
-from ..commodities.data import CommodityData
-from ..commodities.graph_gen import plot_corn_futures
+from .data import CommodityData
+from .graph_gen import plot_corn_futures
 import os
 
-commodities_api = Blueprint('commodities_api', __name__)
+commodities_api = Blueprint('commodities_api', __name__, url_prefix='/api/commodities')
 
 @commodities_api.route('/calculate_score', methods=['POST'])
 def calculate_score():
@@ -31,5 +31,5 @@ def generate_graph():
     filename = 'corn_futures_plot.png'
     plot_corn_futures(num_historical_points, num_predicted_points, filename)
     
-    return send_file(os.path.join('flask/commodities/images', filename), mimetype='image/png')
+    return send_file(os.path.join('api/images', filename), mimetype='image/png')
 

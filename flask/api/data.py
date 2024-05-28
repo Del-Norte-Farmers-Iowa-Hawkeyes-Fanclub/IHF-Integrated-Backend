@@ -3,7 +3,7 @@ from keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
 import requests
-from histdata import fetch_historical_data_recent
+from .histdata import fetch_historical_data_recent
 
 class CommodityData:
     def __init__(self, num_futures, action):
@@ -28,7 +28,7 @@ class CommodityData:
 
     def evaluate_commodity(self):
         # Load the LSTM model
-        model = load_model('flask/commodities/corn_futures_lstm_model.h5')
+        model = load_model('api/corn_futures_lstm_model.h5')
 
         # Fetch the 10 most recent historical data points
         historical_data = fetch_historical_data_recent()
