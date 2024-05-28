@@ -1,3 +1,5 @@
+# histdata.py
+
 import requests
 import pandas as pd
 
@@ -15,5 +17,6 @@ def fetch_historical_data():
         raise Exception(f"Failed to fetch data: {response.status_code}")
 
 # Fetch data
-data = fetch_historical_data()
-print(data.head())
+if __name__ == "__main__":
+    data = fetch_historical_data()
+    print(data.head())
