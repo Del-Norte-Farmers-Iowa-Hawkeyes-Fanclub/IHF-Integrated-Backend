@@ -1,14 +1,16 @@
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 from datetime import datetime, timedelta
-from .histdata import fetch_historical_data
+from histdata import fetch_historical_data
 
 def plot_corn_futures(num_historical_points, num_predicted_points, filename):
     # Load the LSTM model
-    model = load_model('api/corn_futures_lstm_model.h5')
+    model = load_model('flask/commodities/corn_futures_lstm_model.h5')
 
     # Fetch the required number of historical data points
     historical_data = fetch_historical_data()[-num_historical_points:]
@@ -59,15 +61,11 @@ def plot_corn_futures(num_historical_points, num_predicted_points, filename):
     last_date = historical_data['Date'].iloc[-1]
     prediction_dates = [last_date + timedelta(days=i) for i in range(1, num_predicted_points + 1)]
 
-    # Generate the full range of dates for the x-axis
-    historical_dates = [last_date - timedelta(days=(num_historical_points - i)) for i in range(num_historical_points)]
-    all_dates = historical_dates + prediction_dates
-
     # Plot the results
     plt.figure(figsize=(14, 7))
 
     # Plot historical prices
-    plt.plot(historical_dates, historical_prices, label='Historical Prices', color='blue')
+    plt.plot(historical_data['Date'], historical_prices, label='Historical Prices', color='blue')
 
     # Plot predicted prices
     plt.plot(prediction_dates, predicted_prices, label='Predicted Prices', color='red', linestyle='--')
@@ -84,7 +82,7 @@ def plot_corn_futures(num_historical_points, num_predicted_points, filename):
     plt.tight_layout()
 
     # Save plot to file
-    plt.savefig('api/images/' + filename)
+    plt.savefig('flask/commodities/images/' + filename)
     plt.close()
 
 if __name__ == "__main__":
