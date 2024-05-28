@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import com.google.gson.JsonObject;
@@ -49,6 +51,23 @@ public class PersonApiController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("/getPerson")
+    public ResponseEntity<Person> getPerson(Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String email = userDetails.getUsername();  // Email is mapped/unmapped to username for Spring Security
+    
+            // Find a person by username
+            Person person = repository.findByEmail(email);
+    
+            // Return the person if found
+            if (person != null) {
+                return new ResponseEntity<>(person, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+    }
+    
+
     @PutMapping("/setPlayers")
     public ResponseEntity<Person> setPlayers(@RequestBody Map<String, String> requestBody) {
         Person person = repository.findByEmail((String) requestBody.get("email"));
@@ -67,11 +86,18 @@ public class PersonApiController {
         return new ResponseEntity<>(person, HttpStatus.OK);
     }
 
-    @GetMapping("/getPlayers")
-    public ResponseEntity<List<Player>> getPlayers(@RequestBody Map<String, String> requestBody) {
+    @PostMapping("/getPlayers")
+    public ResponseEntity<Object> getPlayers(@RequestBody Map<String, String> requestBody) {
         Person person = repository.findByEmail((String) requestBody.get("email"));
 
-        return new ResponseEntity<>(person.getPlayers(), HttpStatus.OK);
+        return new ResponseEntity<>(person.getPlayersJson(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/deletePlayers")
+    public ResponseEntity<Object> deletePlayers(@RequestBody Map<String, String> requestBody) {
+        Person person = repository.findByEmail((String) requestBody.get("email"));
+
+        return new ResponseEntity<>(person.getPlayersJson(), HttpStatus.OK);
     }
 
     @GetMapping("/getFantasyScore")

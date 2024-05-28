@@ -31,6 +31,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nighthawk.spring_portfolio.mvc.player.Player;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
@@ -115,6 +117,25 @@ public class Person {
         this.cropQuantity = 0;
         this.primaryCrop = "corn";
     }
+
+    public String getPlayersJson() {
+        try {
+            List<Map<String, Object>> playerList = new ArrayList<>();
+            for (Player player : this.players) {
+                Map<String, Object> playerMap = new HashMap<>();
+                playerMap.put("id", player.getId());
+                playerMap.put("name", player.getPlayerName());
+                playerMap.put("position", player.getPosition());
+                playerList.add(playerMap);
+            }
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.writeValueAsString(playerList);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "Error converting players to JSON";
+        }
+    }
+
 
     public int getAge() {
         if (this.dob != null) {
