@@ -215,6 +215,14 @@ public class PersonApiController {
         return new ResponseEntity<>(people, HttpStatus.OK);
     }
 
+    @GetMapping("/ecoAlt")
+    public ResponseEntity<List<Person>> ecoAlt() {
+        List<Person> people = repository.findAll();
+        Person[] peopleArray = people.toArray(new Person[0]);
+        Person.insertionSort(peopleArray);
+        return new ResponseEntity<>(Arrays.asList(peopleArray), HttpStatus.OK);
+    }
+
     @PostMapping("/getEco")
     public ResponseEntity<Object> getEco(@RequestBody Map<String, Object> requestBody) {
         String email = (String) requestBody.get("email");
@@ -244,7 +252,7 @@ public class PersonApiController {
         Person.quickSort(peopleArray, 0, peopleArray.length - 1);
         return new ResponseEntity<>(Arrays.asList(peopleArray), HttpStatus.OK);
     }
-    
+
     @PostMapping("/getCrops")
     public ResponseEntity<Object> getCrops(@RequestBody Map<String, Object> requestBody) {
         String email = (String) requestBody.get("email");
