@@ -271,6 +271,14 @@ public class PersonApiController {
         return new ResponseEntity<>(email + " is updated successfully", HttpStatus.CREATED);
     }
 
+    @GetMapping("/cropsAlt")
+    public ResponseEntity<List<Person>> cropsAlt() {
+        List<Person> people = repository.findAll();
+        Person[] peopleArray = people.toArray(new Person[0]);
+        Person.mergeSort(peopleArray);
+        return new ResponseEntity<>(Arrays.asList(peopleArray), HttpStatus.OK);
+    }
+
     @PostMapping("/ecoUpdate")
     public ResponseEntity<Object> postEco(@RequestBody Map<String, Object> requestBody) {
         String email = (String) requestBody.get("email");
