@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, send_file
-from .data import CommodityData
-from .graph_gen import plot_corn_futures
+from ..commodities.data import CommodityData
+from ..commodities.graph_gen import plot_corn_futures
 import os
 
 commodities_api = Blueprint('commodities_api', __name__)

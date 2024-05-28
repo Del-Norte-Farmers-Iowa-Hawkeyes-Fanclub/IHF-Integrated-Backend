@@ -12,7 +12,7 @@ from __init__ import app, db, login_manager  # Key Flask objects
 from api.players import player_api
 from api.monte_carlo_controller import monte_carlo_api
 from api.user import user_api
-from commodities.controller import commodities_api  # Import the new commodities controller
+from flask.api.controller import commodities_api  # Import the new commodities controller
 # database Initialization functions
 from model.jokes import initJokes
 from model.users import User, initUsers
